@@ -1,0 +1,65 @@
+Linked List Cycle Detection
+
+I allready know the "trick" here, but lets see if we have clues in the question itself.
+
+"There is a cycle in a linked list if at least one node in the list that can be visited again by following the next pointer."
+This means, that if we iterate on the list, if there is no cycle, than we gat tot eh end of the list without repeating visiting any node.
+
+solution with unlimited extra memory: we will keep a list of "visited" nodes, and us we walk throug the list we check if curret node has been visited.
+Solution with the "trick": walk throu the list, with two pointers, one regular and one jumps two nodes at a time. when the "faster node and the "slower" node are the same - there is a cycle in the list.
+
+
+Sol #1:
+def hasCycle(self, head: Optional[ListNode]) -> bool:
+        visited = []
+        iterator = head
+        while (iterator):
+            if (iterator.val in visited):
+                return True
+            else:
+                visited.append(iterator.val)
+                iterator = iterator.next
+        return False
+
+the two first cases run with expected restuls.
+Submition was accepted as well.
+
+Sol #2:
+
+def hasCycle(self, head: Optional[ListNode]) -> bool:
+        iterator_slow = head
+        iterator_fast = head.next # important to init to next
+        while (iterator_slow and iterator_fast): # both needs to be valid!
+            if (iterator_slow == iterator_fast):
+                return True
+            else:
+                iterator_slow = iterator_slow.next
+                iterator_fast = iterator_fast.next
+                if (iterator_fast):
+                    iterator_fast = iterator_fast.next
+        return False
+
+the two first cases run with expected restuls. My first try I initialized the fast iterator to be "head" so I got "true" for alll cases and failed.
+Submition was accepted as well.
+
+
+C++ solution #2:
+bool hasCycle(ListNode* head) {
+        ListNode * iterator_slow = head;
+        ListNode * iterator_fast = head->next; // important to init to next
+        while (iterator_slow && iterator_fast){ // both needs to be valid!
+            if (iterator_slow == iterator_fast){
+                return true;
+            }
+            else {
+                iterator_slow = iterator_slow->next;
+                iterator_fast = iterator_fast->next;
+                if (iterator_fast){
+                    iterator_fast = iterator_fast->next;
+                }
+            }
+        }
+        return false;
+    }
+
+
