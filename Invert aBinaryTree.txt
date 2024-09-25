@@ -1,0 +1,62 @@
+Invert a Binary Tree
+Assume full tree
+
+Starting with 3 node format: using a temp pointer for a swap.
+root stayes the same.
+temp = root.left
+root left = root.right
+root.right = temp
+
+For more than 3 nodes, we go left, invert left sub-tree, then invert right sub tree, and last invert current tree.
+So we need to go deep and up.
+
+Python implementation:
+
+First draft was:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if (root.left and root.right):
+            root.left = invertTree(root.left)
+            root.right = invertTree(root.right)
+            temp = root.left
+            root.left = root.right
+            root.right = temp
+        return root
+
+but i got an error for 'invertTree' not defined. We need to verify how recursive calling is in python.
+Sol: I had to add 'self' to the call since we are in class Solution.
+Adding prints to debug
+
+ def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        print(root, root.left, root.right)
+        if (root.left and root.right):
+            print(root.val, root.left.val, root.right.val)
+            root.left = self.invertTree(root.left)
+            root.right = self.invertTree(root.right)
+            temp = root.left
+            root.left = root.right
+            root.right = temp
+        return root
+
+Add empty treee case:
+
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if (root and root.left and root.right):
+            root.left = self.invertTree(root.left)
+            root.right = self.invertTree(root.right)
+            temp = root.left
+            root.left = root.right
+            root.right = temp
+        return root
+
+This function failed for a tree that is not full.
+Modify for these cases:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if (root):
+            if (root.left): root.left = self.invertTree(root.left)
+            if (root.right): root.right = self.invertTree(root.right)
+            temp = root.left
+            root.left = root.right
+            root.right = temp
+        return root
+
+Solution eccepted!
